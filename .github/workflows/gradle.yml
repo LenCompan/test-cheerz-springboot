@@ -96,7 +96,7 @@ jobs:
         name: app-snapshot
         path: ./build/libs
     - name: Build the Docker image
-      run: pwd && ls -la && docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}:${{ github.sha }} --tag ${{ env.IMAGE_NAME }}:latest
+      run: docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
     - name: Log into registry ${{ env.REGISTRY }}
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
