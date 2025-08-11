@@ -1,5 +1,5 @@
 FROM eclipse-temurin:17-jdk-alpine
-RUN addgroup --system spring && adduser --system --group spring
+RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
 COPY ./build/libs/hello-world-0.0.1-SNAPSHOT.jar /app/
