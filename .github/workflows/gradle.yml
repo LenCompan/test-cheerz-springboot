@@ -77,11 +77,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
+    - uses: actions/checkout@v4
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
         name: app-snapshot
         path: ./build/libs
-    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: pwd && ls -la && docker build . --file Dockerfile --tag ${{ github.repository }}:${{ github.sha }}
