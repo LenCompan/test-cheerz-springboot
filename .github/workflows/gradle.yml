@@ -13,6 +13,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build:
 
@@ -76,6 +82,10 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: [build]
+    permissions:
+      contents: read
+      packages: write
+
     steps:
     - uses: actions/checkout@v4
     - name: Download build artifacts
@@ -84,4 +94,14 @@ jobs:
         name: app-snapshot
         path: ./build/libs
     - name: Build the Docker image
-      run: pwd && ls -la && docker build . --file Dockerfile --tag ${{ github.repository }}:${{ github.sha }}
+      run: pwd && ls -la && docker build . --file Dockerfile --tag ${{ github.repository }}:${{ github.sha }} --tag ${{ github.repository }}:latest
+
+    - name: Log into registry ${{ env.REGISTRY }}
+      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+  
+    - name: Push the docker image
+      run: docker push ${{ github.repository }}:${{ github.sha }} && docker push ${{ github.repository }}:${{ github.sha }}
