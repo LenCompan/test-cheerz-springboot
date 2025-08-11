@@ -106,4 +106,4 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
   
     - name: Push the docker image
-      run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} && docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} && docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
