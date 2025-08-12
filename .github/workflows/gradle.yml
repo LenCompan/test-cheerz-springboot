@@ -113,7 +113,7 @@ jobs:
     - uses: 'google-github-actions/auth@v2'
       with:
         project_id: ${{ secrets.GOOGLE_PROJECT_NAME }}
-        workload_identity_provider: ${{ secret.WORKLOAD_IDENTITY_POOL }}
+        workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_POOL }}
 
     - name: Get cluster credentials
       uses: 'google-github-actions/get-gke-credentials@v2'
