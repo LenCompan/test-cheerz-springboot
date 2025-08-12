@@ -85,6 +85,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     steps:
     - uses: actions/checkout@v4
@@ -107,3 +108,20 @@ jobs:
   
     - name: Push the docker image
       run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} && docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+    - name: Gcloud connect
+    - uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: ${{ secrets.GOOGLE_PROJECT_NAME }}
+        workload_identity_provider: ${{ secret.WORKLOAD_IDENTITY_POOL }}
+
+    - name: Get cluster credentials
+      uses: 'google-github-actions/get-gke-credentials@v2'
+      with:
+        cluster_name: 'autopilot-cluster-1'
+        location: 'europe-west1'
+
+    - name: Update deployment image
+      run: |
+        kubectl -n ${{ secrets.NAMESPACE }} set image deployment/deployment-1 test-cheerz-springboot-1=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        kubectl -n ${{ secrets.NAMESPACE }} rollout status deployment/deployment-1 --timeout=120s
