@@ -110,7 +110,7 @@ jobs:
       run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} && docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
     - name: Gcloud connect
-    - uses: 'google-github-actions/auth@v2'
+      uses: 'google-github-actions/auth@v2'
       with:
         project_id: ${{ secrets.GOOGLE_PROJECT_NAME }}
         workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_POOL }}
